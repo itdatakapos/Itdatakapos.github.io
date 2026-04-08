@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Maintenance Log - Arafat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans">
+
+    <div class="max-w-md mx-auto p-4">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-blue-400">IT Maintenance</h1>
+            <p class="text-gray-400">Kalteng Pos Digital Log</p>
+        </header>
+
+        <div class="bg-gray-800 p-6 rounded-xl shadow-lg mb-6 border border-gray-700">
+            <div class="space-y-4">
+                <input type="text" id="device-name" placeholder="Nama PC / ID Perangkat" 
+                       class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:border-blue-500">
+                
+                <select id="status" class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:border-blue-500">
+                    <option value="Normal">Status: Normal ✅</option>
+                    <option value="Maintenance">Status: Maintenance 🛠️</option>
+                    <option value="Rusak">Status: Rusak ❌</option>
+                </select>
+
+                <textarea id="notes" placeholder="Catatan perbaikan..." 
+                          class="w-full p-3 rounded bg-gray-700 border border-gray-600 h-24 focus:outline-none focus:border-blue-500"></textarea>
+
+                <button onclick="addLog()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition">
+                    Simpan Log Baru
+                </button>
+            </div>
+        </div>
+
+        <div id="log-list" class="space-y-4">
+            </div>
+    </div>
+
+    <script>
+        // Logika JavaScript akan kita isi setelah ini
+    </script>
+</body>
+</html>
