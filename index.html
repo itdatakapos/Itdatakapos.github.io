@@ -39,7 +39,113 @@
     </div>
 
     <script>
-        // Logika JavaScript akan kita isi setelah ini
+        
+    const logList = document.getElementById('log-list');
+
+    // 1. Fungsi untuk menampilkan data saat halaman dibuka
+    window.onload = () => {
+        displayLogs();
+    };
+
+    // 2. Fungsi utama untuk menyimpan data
+    function addLog() {
+        const device = document.getElementById('device-name').value;
+        const status = document.getElementById('status').value;
+        const notes = document.getElementById('notes').value;
+
+        // Validasi simpel: jangan sampai nama PC kosong
+        if (!device) {
+            alert("Nama Perangkat harus diisi ya, Mas Arafat!");
+            return;
+        }
+
+        const newLog = {
+            device: device,
+            status: status,
+            notes: notes,
+            date: new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })
+        };
+
+        // Ambil data lama dari LocalStorage, kalau kosong buat array baru []
+        let logs = JSON.parse(localStorage.getItem('itLogs')) || [];
+        
+        // Tambah data baru ke urutan paling atas (unshift)
+        logs.unshift(newLog);
+        
+        // Simpan kembali ke LocalStorage
+        localStorage.setItem('itLogs', JSON.stringify(logs));
+
+        // Reset form input setelah simpan
+        document.getElementById('device-name').value = '';
+        document.getElementById('notes').value = '';
+
+        // Refresh tampilan list
+        displayLogs();
+    }
+
+    // 3. Fungsi untuk merender list log ke layar
+    function displayLogs() {
+        let logs = JSON.parse(localStorage.getItem('itLogs')) || [];
+        logList.innerHTML = ""; // Kosongkan dulu sebelum render ulang
+
+        logs.forEach((log, index) => {
+            // Tentukan warna label berdasarkan status
+            let statusClass = "bg-green-600";
+            if (log.status === "Maintenance") statusClass = "bg-yellow-600 text-black";
+            if (log.status === "Rusak") statusClass = "bg-red-600";
+
+            logList.innerHTML += `
+                <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 shadow-md animate-fade-in">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-blue-300 text-lg">${log.device}</h3>
+                        <span class="text-[10px] text-gray-500">${log.date}</span>
+                    </div>
+                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold ${statusClass} mb-2">
+                        ${log.status}
+                    </span>
+                    <p class="text-sm text-gray-300 bg-gray-900 p-2 rounded italic font-mono border-l-2 border-blue-500">
+                        ${log.notes || 'Tidak ada catatan khusus.'}
+                    </p>
+                    <div class="mt-4 flex gap-4 border-t border-gray-700 pt-2">
+                        <button onclick="shareWA(${index})" class="text-xs text-green-400 hover:text-green-300 flex items-center gap-1">
+                            💬 Kirim ke WA
+                        </button>
+                        <button onclick="deleteLog(${index})" class="text-xs text-red-500 hover:text-red-400">
+                            🗑️ Hapus
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // 4. Fitur Hapus Log
+    function deleteLog(index) {
+        if (confirm("Yakin mau hapus riwayat maintenance ini?")) {
+            let logs = JSON.parse(localStorage.getItem('itLogs'));
+            logs.splice(index, 1);
+            localStorage.setItem('itLogs', JSON.stringify(logs));
+            displayLogs();
+        }
+    }
+
+    // 5. Fitur Canggih: Share ke WhatsApp (Format Laporan)
+    function shareWA(index) {
+        let logs = JSON.parse(localStorage.getItem('itLogs'));
+        let log = logs[index];
+        let text = `*LAPORAN IT MAINTENANCE*%0A` +
+                   `---------------------------%0A` +
+                   `*Perangkat:* ${log.device}%0A` +
+                   `*Status:* ${log.status}%0A` +
+                   `*Catatan:* ${log.notes}%0A` +
+                   `*Tanggal:* ${log.date}%0A` +
+                   `---------------------------%0A` +
+                   `_Oleh: IT Kalteng Pos_`;
+        
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+
+
     </script>
 </body>
 </html>
